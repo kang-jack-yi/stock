@@ -2,6 +2,38 @@
 
 使用新浪财经公开接口构建的 A 股行情与财务研究网站。采用 macOS 软件风格的侧栏、工具栏和卡片，支持明暗主题、桌面与移动端，以及邮箱账号和独立自选股。行情全部来自真实接口，不使用演示数据。
 
+## 项目效果图
+
+以下截图于 2026-10-05 从本地运行的当前版本截取，使用真实接口数据。行情以页面标注的数据日期为准；图片保存在 `docs/screenshots/`，可点击查看原图。
+
+### 市场总览 · 亮色主题
+
+四大指数、全市场涨跌分布、成交额、分时走势与热门公司。
+
+![市场总览：亮色主题、指数卡片与分时走势](docs/screenshots/overview-light.png)
+
+<details>
+<summary>市场总览 · 暗色主题</summary>
+
+![市场总览：暗色主题](docs/screenshots/overview-dark.png)
+
+</details>
+
+### 行情详情 · K 线与五档盘口
+
+行情快照、估值指标、日 K、MA5/10/20、成交量与买卖五档。
+
+![贵州茅台行情详情：日 K、均线、成交量与五档盘口](docs/screenshots/stock-detail.png)
+
+<details>
+<summary>移动端 · 市场总览</summary>
+
+390px 宽度下的指数卡片、市场温度与底部导航。
+
+<img src="docs/screenshots/overview-mobile.png" alt="移动端市场总览与底部导航" width="390" />
+
+</details>
+
 ## 技术栈与 Next.js 规范
 
 - Next.js 16 App Router、React、严格模式 TypeScript。
