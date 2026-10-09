@@ -1,4 +1,5 @@
 import type { Numeric } from "./types";
+import { tradingSession } from "./trading-calendar";
 
 /** 格式化价格或指标并保留指定小数位，缺失值显示破折号。 */
 export function number(value: Numeric | undefined, digits = 2) {
@@ -37,19 +38,7 @@ export function isIndex(symbol: string) {
 export function exchange(symbol: string) {
   return symbol.startsWith("sh") ? "SH" : symbol.startsWith("bj") ? "BJ" : "SZ";
 }
-/** 按中国标准时间判断工作日交易时段；节假日由上游行情日期体现。 */
+/** 按已核实交易所日历和中国标准时间判断连续交易时段。 */
 export function tradingHours() {
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone: "Asia/Shanghai",
-    weekday: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-    hourCycle: "h23",
-  }).formatToParts(new Date());
-  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
-  const minute = Number(get("hour")) * 60 + Number(get("minute"));
-  return (
-    !["Sat", "Sun"].includes(get("weekday")) &&
-    ((minute >= 555 && minute <= 690) || (minute >= 780 && minute <= 910))
-  );
+  return tradingSession().active;
 }

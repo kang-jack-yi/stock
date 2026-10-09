@@ -14,7 +14,9 @@ export default async function StockPage({
     { view } = await searchParams;
   if (!symbolPattern.test(symbol)) notFound();
   const selected =
-    !isIndex(symbol) && ["funds", "financials"].includes(view || "") ? view! : "overview";
+    !isIndex(symbol) && ["funds", "financials", "research"].includes(view || "")
+      ? view!
+      : "overview";
   return <StockDetail symbol={symbol} view={selected} />;
 }
 /** 动态标题不访问上游，避免元数据请求重复拉取行情。 */

@@ -1,0 +1,121 @@
+.research-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  padding: 0 24px 20px;
+}
+.research-tools > .ant-select {
+  min-width: 180px;
+}
+.research-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0 24px 20px;
+}
+.research-group-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px 4px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-alt);
+  max-width: 100%;
+}
+.research-group-chip > span {
+  overflow-wrap: anywhere;
+}
+.research-plans {
+  padding: 0 24px 24px;
+}
+.research-plan {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+  border-top: 1px solid var(--border);
+}
+.research-plan-code {
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+  flex: 0 0 86px;
+}
+.research-plan-content {
+  min-width: 0;
+  flex: 1;
+}
+.research-plan-content p {
+  color: var(--muted);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin-top: 6px;
+}
+.research-plan-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.research-plan-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.research-form {
+  padding: 0 24px 24px;
+}
+.research-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.research-login {
+  padding: 0 24px 24px;
+  color: var(--muted);
+}
+.stock-research {
+  margin-top: 24px;
+}
+.research-editor-modal .stock-research {
+  margin: 0;
+  border: none;
+  box-shadow: none;
+}
+.research-editor-modal .research-form {
+  padding: 0;
+}
+.research-editor-modal .panel-heading {
+  padding-left: 0;
+  padding-right: 0;
+}
+@media (max-width: 640px) {
+  .research-tools,
+  .research-groups {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .research-plans,
+  .research-form,
+  .research-login {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .research-plan {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .research-plan-content {
+    flex-basis: calc(100% - 100px);
+  }
+  .research-plan-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .research-form-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}

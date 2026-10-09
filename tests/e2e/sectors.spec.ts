@@ -127,7 +127,10 @@ test("板块图谱与列表切换，名称搜索及成分页交互可用", async
   await search.fill("BC电池");
   await page.getByTitle("数据列表", { exact: true }).click();
   await expect(page.locator(".sector-board .ant-table-tbody tr.ant-table-row")).toHaveCount(1);
-  await expect(page.locator(".sector-name-button")).toHaveAttribute("aria-label", "BC电池，查看成分股");
+  await expect(page.locator(".sector-name-button")).toHaveAttribute(
+    "aria-label",
+    "BC电池，查看成分股",
+  );
   await search.fill("完全没有的板块名字");
   await expect(page.getByText("没有匹配的板块，请尝试其他名称", { exact: true })).toBeVisible();
   await search.fill("");

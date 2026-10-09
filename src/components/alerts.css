@@ -1,0 +1,64 @@
+.alerts-create,
+.alerts-rules,
+.alerts-history {
+  margin-top: 24px;
+}
+.alerts-fields {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 16px;
+}
+.alerts-fields .ant-input-number {
+  width: 100%;
+}
+.alerts-list {
+  padding: 0 24px 24px;
+}
+.alert-rule {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 0;
+  border-top: 1px solid var(--border);
+}
+.alert-rule > div:first-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.alert-rule p {
+  margin: 6px 0;
+}
+.alert-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+.alerts-create > .ant-form {
+  padding: 0 24px 24px;
+}
+@media (max-width: 900px) {
+  .alerts-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .alerts-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .alert-rule {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .alerts-rules .panel-heading,
+  .alerts-history .panel-heading {
+    flex-wrap: wrap;
+  }
+  .alerts-list {
+    padding: 0 16px 16px;
+  }
+  .alerts-create > .ant-form {
+    padding: 0 16px 16px;
+  }
+}

@@ -1,0 +1,62 @@
+.saved-screeners-panel {
+  padding: 24px;
+  margin-bottom: 24px;
+}
+.saved-screeners-panel .panel-heading {
+  padding: 0 0 16px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.saved-screeners-hint,
+.saved-screeners-batch > span {
+  color: var(--muted);
+  font-size: 13px;
+}
+.saved-screeners-list {
+  display: grid;
+  gap: 12px;
+}
+.saved-screener-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  min-width: 0;
+}
+.saved-screener-row > strong {
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.saved-screener-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.saved-screeners-batch,
+.saved-screeners-error {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+@media (max-width: 700px) {
+  .saved-screeners-panel {
+    padding: 18px;
+  }
+  .saved-screener-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .saved-screener-actions {
+    width: 100%;
+  }
+  .saved-screener-actions .ant-btn {
+    flex: 1;
+  }
+}

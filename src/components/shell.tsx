@@ -19,10 +19,12 @@ import {
   SwapOutlined,
   MoreOutlined,
   ReadOutlined,
+  BellOutlined,
 } from "@ant-design/icons";
 import { useApp } from "./providers";
 import { StockSearch } from "./search";
 import { fetchJson } from "@/lib/api";
+import { MarketSession } from "./market-session";
 
 const navigation = [
   { href: "/", label: "市场总览", icon: AppstoreOutlined, group: "市场" },
@@ -34,6 +36,7 @@ const navigation = [
   { href: "/compare", label: "股票比较", icon: SwapOutlined, group: "研究工具" },
   { href: "/funds", label: "资金流向", icon: FundOutlined, group: "研究工具" },
   { href: "/financials", label: "财务研究", icon: BankOutlined, group: "研究工具" },
+  { href: "/alerts", label: "提醒中心", icon: BellOutlined, group: "研究工具" },
 ];
 /** 首页采用精确匹配，其余导航允许详情子路径继承当前栏目状态。 */
 function isActivePath(pathname: string, href: string) {
@@ -80,7 +83,13 @@ export function Shell({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     /** Cmd / Ctrl + K 聚焦顶部股票搜索；保留其他浏览器和系统组合键。 */
     function focusSearch(event: KeyboardEvent) {
-      if (event.key.toLowerCase() !== "k" || !(event.metaKey || event.ctrlKey) || event.altKey || event.shiftKey) return;
+      if (
+        event.key.toLowerCase() !== "k" ||
+        !(event.metaKey || event.ctrlKey) ||
+        event.altKey ||
+        event.shiftKey
+      )
+        return;
       const input = document.querySelector<HTMLInputElement>('.topbar [aria-label="搜索股票"]');
       if (!input) return;
       event.preventDefault();
@@ -111,23 +120,25 @@ export function Shell({ children }: { children: React.ReactNode }) {
           {["市场", "研究工具"].map((group) => (
             <div className="nav-group" key={group}>
               <div className="nav-caption">{group}</div>
-              {navigation.filter((item) => item.group === group).map((item) => {
-                const active = isActivePath(pathname, item.href);
-                const Icon = item.icon;
-                return (
-                  <Link
-                    className={`nav-item ${active ? "active" : ""}`}
-                    href={item.href}
-                    key={item.href}
-                    aria-label={item.label}
-                    title={item.label}
-                    aria-current={active ? "page" : undefined}
-                  >
-                    <Icon />
-                    <span>{item.label}</span>
-                  </Link>
-                );
-              })}
+              {navigation
+                .filter((item) => item.group === group)
+                .map((item) => {
+                  const active = isActivePath(pathname, item.href);
+                  const Icon = item.icon;
+                  return (
+                    <Link
+                      className={`nav-item ${active ? "active" : ""}`}
+                      href={item.href}
+                      key={item.href}
+                      aria-label={item.label}
+                      title={item.label}
+                      aria-current={active ? "page" : undefined}
+                    >
+                      <Icon />
+                      <span>{item.label}</span>
+                    </Link>
+                  );
+                })}
             </div>
           ))}
         </nav>
@@ -154,14 +165,20 @@ export function Shell({ children }: { children: React.ReactNode }) {
             <span>观澜行情</span>
             <strong>{pageLabel}</strong>
           </div>
-          <div className="toolbar-search" role="search" aria-label="全站股票搜索" aria-keyshortcuts="Meta+K Control+K" title="Cmd / Ctrl + K：搜索股票">
+          <div
+            className="toolbar-search"
+            role="search"
+            aria-label="全站股票搜索"
+            aria-keyshortcuts="Meta+K Control+K"
+            title="Cmd / Ctrl + K：搜索股票"
+          >
             <StockSearch />
-            <kbd className="toolbar-shortcut" aria-hidden="true">⌘ / Ctrl K</kbd>
+            <kbd className="toolbar-shortcut" aria-hidden="true">
+              ⌘ / Ctrl K
+            </kbd>
           </div>
           <div className="topbar-right">
-            <span className="market-source">
-              <i /> 行情数据
-            </span>
+            <MarketSession />
             <Button
               type="text"
               className="theme-button"
@@ -219,12 +236,18 @@ export function Shell({ children }: { children: React.ReactNode }) {
               selectedKeys: activePage ? [activePage.href] : [],
               items: mobileMore.map((item) => {
                 const Icon = item.icon;
-                return { key: item.href, icon: <Icon />, label: <Link href={item.href}>{item.label}</Link> };
+                return {
+                  key: item.href,
+                  icon: <Icon />,
+                  label: <Link href={item.href}>{item.label}</Link>,
+                };
               }),
             }}
           >
             <button
-              className={mobileMore.some((item) => isActivePath(pathname, item.href)) ? "active" : ""}
+              className={
+                mobileMore.some((item) => isActivePath(pathname, item.href)) ? "active" : ""
+              }
               aria-label="更多功能"
             >
               <MoreOutlined />

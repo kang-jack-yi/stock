@@ -91,7 +91,7 @@ test("搜索、行情、K线、资金和财务页面使用真实接口", async (
   await page.getByRole("tab", { name: "资金流向" }).click();
   await expect(page.getByText("今日资金净流入", { exact: true })).toBeVisible();
   await page.getByRole("tab", { name: "财务报表" }).click();
-  await expect(page.getByText("报告期对比", { exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "原始报告期对比", exact: true })).toBeVisible();
   await page.getByText("资产负债表", { exact: true }).click();
   await expect(page.getByText("货币资金", { exact: true }).first()).toBeVisible();
   expect(errors).toEqual([]);
@@ -148,7 +148,7 @@ test("未登录自选页面受保护，界面注册后可以收藏和移除股�
   await page.getByRole("button", { name: "移出自选 sh600519" }).click();
   await expect(page.getByText("自选列表还是空的，搜索你关注的第一只股票吧")).toBeVisible();
   await page.getByRole("button", { name: "账号菜单" }).click();
-  await page.getByText("退出登录", { exact: true }).click();
+  await page.getByRole("menuitem", { name: /退出登录/ }).click();
   await expect(page.getByRole("button", { name: "登录 / 注册" })).toBeVisible();
 });
 

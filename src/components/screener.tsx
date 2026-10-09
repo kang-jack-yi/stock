@@ -8,6 +8,7 @@ import type { ScreenerResult } from "@/lib/screener";
 import { compact } from "@/lib/format";
 import { StockTable } from "./stock-table";
 import { DataError, DataMeta, DataSkeleton } from "./data-state";
+import { SavedScreeners } from "./saved-screeners";
 import "./research-tools.css";
 
 /** 表单单位与 API 一致，市值和成交额输入项在提交时从亿元转换为元。 */
@@ -270,6 +271,10 @@ export function Screener({ query }: { query: string }) {
           </div>
         </Form>
       </section>
+      <SavedScreeners
+        query={query}
+        symbols={error ? [] : (data?.data.stocks || []).map((stock) => stock.symbol)}
+      />
       <section className="panel screener-results">
         <div className="panel-heading">
           <div>

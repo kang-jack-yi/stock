@@ -12,6 +12,7 @@ import { FundsPanel } from "./funds-panel";
 import { FinancialPanel } from "./financial-panel";
 import { WatchButton } from "./watch-button";
 import { DataError, DataMeta, DataSkeleton } from "./data-state";
+import { StockResearch } from "./stock-research";
 
 /** 买卖各五档数量从股转换为手，条形长度表示同一盘口内相对数量。 */
 function OrderBook({ quote }: { quote: Quote }) {
@@ -117,6 +118,7 @@ export function StockDetail({ symbol, view }: { symbol: string; view: string }) 
     },
     ...(!index
       ? [
+          { key: "research", label: "研究笔记", children: <StockResearch symbol={symbol} /> },
           {
             key: "funds",
             label: "资金流向",
@@ -171,6 +173,9 @@ export function StockDetail({ symbol, view }: { symbol: string; view: string }) 
           </div>
           <div className="heading-buttons">
             {!index && <WatchButton symbol={symbol} />}
+            <Link href={`/alerts?symbol=${symbol}`}>
+              <Button>设置提醒</Button>
+            </Link>
             <Link href={`/compare?symbols=${symbol}${symbol === "sh000300" ? "" : ",sh000300"}`}>
               <Button
                 aria-label="与沪深300比较走势"

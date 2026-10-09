@@ -28,6 +28,37 @@ export function db() {
       created_at INTEGER NOT NULL, PRIMARY KEY (user_id, symbol)
     );
     CREATE INDEX IF NOT EXISTS sessions_user ON sessions(user_id);
+    CREATE TABLE IF NOT EXISTS alert_rules (
+      id TEXT PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      symbol TEXT NOT NULL, metric TEXT NOT NULL, direction TEXT NOT NULL, threshold REAL NOT NULL,
+      enabled INTEGER NOT NULL DEFAULT 1, previous_value REAL, previous_at TEXT, created_at INTEGER NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS alert_rules_user ON alert_rules(user_id);
+    CREATE TABLE IF NOT EXISTS alert_events (
+      id TEXT PRIMARY KEY, rule_id TEXT REFERENCES alert_rules(id) ON DELETE SET NULL,
+      user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE, symbol TEXT NOT NULL, name TEXT NOT NULL,
+      metric TEXT NOT NULL, direction TEXT NOT NULL, threshold REAL NOT NULL, value REAL NOT NULL,
+      quote_at TEXT NOT NULL, created_at INTEGER NOT NULL, read_at INTEGER
+    );
+    CREATE INDEX IF NOT EXISTS alert_events_user ON alert_events(user_id, created_at DESC);
+    CREATE TABLE IF NOT EXISTS worker_status (id TEXT PRIMARY KEY, checked_at INTEGER NOT NULL, message TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS saved_screeners (
+      id TEXT PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      name TEXT NOT NULL, filters TEXT NOT NULL, created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS saved_screeners_user ON saved_screeners(user_id, updated_at DESC);
+    CREATE TABLE IF NOT EXISTS research_groups (
+      id TEXT PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      name TEXT NOT NULL, created_at INTEGER NOT NULL, UNIQUE(user_id,name)
+    );
+    CREATE INDEX IF NOT EXISTS research_groups_user ON research_groups(user_id);
+    CREATE TABLE IF NOT EXISTS research_entries (
+      user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE, symbol TEXT NOT NULL,
+      group_id TEXT REFERENCES research_groups(id) ON DELETE SET NULL, note TEXT NOT NULL DEFAULT '',
+      tags TEXT NOT NULL DEFAULT '[]', review_date TEXT NOT NULL DEFAULT '', position INTEGER NOT NULL DEFAULT 0,
+      updated_at INTEGER NOT NULL, PRIMARY KEY(user_id,symbol)
+    );
+    CREATE INDEX IF NOT EXISTS research_entries_user ON research_entries(user_id,position);
   `);
   globalDb.stockDb = connection;
   return connection;
