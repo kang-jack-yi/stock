@@ -1,0 +1,96 @@
+.announcements-panel .panel-heading {
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.announcements-panel .announcements-filter {
+  display: grid;
+  grid-template-columns: minmax(180px, 2fr) minmax(110px, 1fr) repeat(2, minmax(150px, 1fr)) auto;
+  gap: 12px;
+  align-items: end;
+  padding: 0 24px;
+}
+.announcements-filter .ant-form-item {
+  margin-bottom: 0;
+  min-width: 0;
+}
+.announcements-note {
+  padding: 0 24px;
+  margin: 18px 0;
+  color: var(--muted);
+  line-height: 1.8;
+  font-size: 12px;
+}
+.announcements-list {
+  padding: 0 24px;
+}
+.announcement-row {
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr) 20px;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 0;
+  border-top: 1px solid var(--border);
+  color: var(--text);
+}
+.announcement-row:hover strong {
+  color: var(--primary);
+}
+.announcement-row time {
+  font-size: 12px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.announcement-content {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+.announcement-content .ant-tag {
+  flex-shrink: 0;
+  margin: 0;
+}
+.announcement-content strong {
+  overflow-wrap: anywhere;
+  font-size: 14px;
+  line-height: 1.8;
+  font-weight: 500;
+}
+.announcements-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 20px 24px;
+  color: var(--muted);
+  font-size: 12px;
+}
+@media (max-width: 1000px) {
+  .announcements-panel .announcements-filter {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .announcements-panel .announcements-filter {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 0 16px;
+  }
+  .announcements-note,
+  .announcements-list {
+    padding: 0 16px;
+  }
+  .announcement-row {
+    grid-template-columns: minmax(0, 1fr) 20px;
+    gap: 8px;
+  }
+  .announcement-row time {
+    grid-column: 1 / -1;
+  }
+  .announcement-content {
+    align-items: flex-start;
+  }
+  .announcements-pagination {
+    padding: 20px 16px;
+  }
+}

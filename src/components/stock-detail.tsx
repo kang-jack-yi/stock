@@ -13,6 +13,7 @@ import { FinancialPanel } from "./financial-panel";
 import { WatchButton } from "./watch-button";
 import { DataError, DataMeta, DataSkeleton } from "./data-state";
 import { StockResearch } from "./stock-research";
+import { Announcements } from "./announcements";
 
 /** 买卖各五档数量从股转换为手，条形长度表示同一盘口内相对数量。 */
 function OrderBook({ quote }: { quote: Quote }) {
@@ -120,6 +121,11 @@ export function StockDetail({ symbol, view }: { symbol: string; view: string }) 
       ? [
           { key: "research", label: "研究笔记", children: <StockResearch symbol={symbol} /> },
           {
+            key: "announcements",
+            label: "公告与事件",
+            children: <Announcements symbol={symbol} />,
+          },
+          {
             key: "funds",
             label: "资金流向",
             children: (
@@ -173,6 +179,11 @@ export function StockDetail({ symbol, view }: { symbol: string; view: string }) 
           </div>
           <div className="heading-buttons">
             {!index && <WatchButton symbol={symbol} />}
+            {!index && (
+              <Link href={`/portfolio?symbol=${symbol}`}>
+                <Button>记录持仓</Button>
+              </Link>
+            )}
             <Link href={`/alerts?symbol=${symbol}`}>
               <Button>设置提醒</Button>
             </Link>

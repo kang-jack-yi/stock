@@ -1,0 +1,82 @@
+.portfolio-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.portfolio-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+.portfolio-metric {
+  padding: 20px;
+  min-width: 0;
+}
+.portfolio-metric > span {
+  display: block;
+  color: var(--muted);
+}
+.portfolio-metric > strong {
+  display: block;
+  margin-top: 12px;
+  font-size: clamp(18px, 2vw, 28px);
+  overflow-wrap: anywhere;
+}
+.portfolio-holdings,
+.portfolio-concentration,
+.portfolio-records {
+  margin-top: 24px;
+}
+.ant-alert.portfolio-warning {
+  margin-top: 24px;
+}
+.portfolio-holdings .panel-heading,
+.portfolio-records .panel-heading {
+  flex-wrap: wrap;
+}
+.portfolio-symbol {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.portfolio-note {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.portfolio-empty {
+  padding: 0 24px 24px;
+  color: var(--muted);
+}
+.portfolio-form {
+  margin-top: 20px;
+}
+.portfolio-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 16px;
+}
+.portfolio-fields .ant-input-number {
+  width: 100%;
+}
+@media (max-width: 1050px) {
+  .portfolio-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .portfolio-metrics {
+    gap: 10px;
+  }
+  .portfolio-metric {
+    padding: 16px;
+  }
+  .portfolio-metric > strong {
+    font-size: 19px;
+  }
+  .portfolio-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

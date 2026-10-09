@@ -59,6 +59,20 @@ export function db() {
       updated_at INTEGER NOT NULL, PRIMARY KEY(user_id,symbol)
     );
     CREATE INDEX IF NOT EXISTS research_entries_user ON research_entries(user_id,position);
+    CREATE TABLE IF NOT EXISTS portfolio_transactions (
+      sequence INTEGER PRIMARY KEY AUTOINCREMENT, id TEXT NOT NULL UNIQUE,
+      user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE, date TEXT NOT NULL, kind TEXT NOT NULL,
+      symbol TEXT NOT NULL DEFAULT '', quantity REAL NOT NULL DEFAULT 0, price REAL NOT NULL DEFAULT 0,
+      amount REAL NOT NULL DEFAULT 0, fee REAL NOT NULL DEFAULT 0, note TEXT NOT NULL DEFAULT '', created_at INTEGER NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS portfolio_transactions_user ON portfolio_transactions(user_id,date,sequence);
+    CREATE TABLE IF NOT EXISTS review_markets (date TEXT PRIMARY KEY, payload TEXT NOT NULL, fetched_at INTEGER NOT NULL);
+    CREATE TABLE IF NOT EXISTS review_accounts (
+      user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      date TEXT NOT NULL REFERENCES review_markets(date) ON DELETE CASCADE, payload TEXT NOT NULL,
+      PRIMARY KEY(user_id,date)
+    );
+    CREATE INDEX IF NOT EXISTS review_accounts_date ON review_accounts(date);
   `);
   globalDb.stockDb = connection;
   return connection;

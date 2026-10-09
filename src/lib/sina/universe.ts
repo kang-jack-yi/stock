@@ -52,6 +52,11 @@ async function universe(): Promise<ApiResult<Universe>> {
   });
 }
 
+/** 返回完整市场快照供收盘复盘共用；保留采集时点与缓存降级信息。 */
+export function getUniverse(): Promise<ApiResult<Universe>> {
+  return universe();
+}
+
 /** 对同一五分钟快照执行条件查询，分页只影响展示，不缩小筛选范围。 */
 export async function screener(filters: ScreenerFilters): Promise<ApiResult<ScreenerResult>> {
   const snapshot = await universe();

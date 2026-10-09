@@ -1,0 +1,120 @@
+.review-history,
+.review-watchlist,
+.review-screeners,
+.review-sectors,
+.review-alerts {
+  margin-top: 24px;
+}
+.review-heading-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.review-date {
+  width: 160px;
+  flex-shrink: 0;
+}
+.review-summary,
+.review-body {
+  padding: 0 24px 24px;
+}
+.review-comparison,
+.review-baseline {
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 16px;
+  overflow-wrap: anywhere;
+}
+.review-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.review-stats > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-alt);
+  min-width: 0;
+}
+.review-stats > div > span,
+.review-stats small {
+  color: var(--muted);
+  font-size: 12px;
+}
+.review-stats strong {
+  font-size: 24px;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.review-summary > p {
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+.review-stock-code {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 3px;
+}
+.review-excluded {
+  padding-left: 18px;
+  line-height: 2;
+}
+.review-scheme-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.review-scheme-label strong {
+  overflow-wrap: anywhere;
+}
+.review-alert-list article {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+.review-alert-list article:first-child {
+  padding-top: 0;
+}
+.review-alert-list p {
+  margin: 6px 0;
+}
+.review-watchlist .ant-collapse {
+  margin-top: 16px;
+}
+@media (max-width: 900px) {
+  .review-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .review-summary,
+  .review-body {
+    padding: 0 16px 16px;
+  }
+  .review-history .panel-heading {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .review-heading-actions {
+    width: 100%;
+  }
+  .review-heading-actions .ant-btn {
+    flex: 1;
+  }
+  .review-stats {
+    gap: 10px;
+  }
+  .review-stats > div {
+    padding: 12px;
+  }
+  .review-stats strong {
+    font-size: 20px;
+  }
+}

@@ -14,7 +14,7 @@ export default async function StockPage({
     { view } = await searchParams;
   if (!symbolPattern.test(symbol)) notFound();
   const selected =
-    !isIndex(symbol) && ["funds", "financials", "research"].includes(view || "")
+    !isIndex(symbol) && ["funds", "financials", "research", "announcements"].includes(view || "")
       ? view!
       : "overview";
   return <StockDetail symbol={symbol} view={selected} />;

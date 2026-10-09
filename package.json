@@ -7,11 +7,13 @@
     "build": "node --experimental-sqlite node_modules/next/dist/bin/next build",
     "start": "node --experimental-sqlite node_modules/next/dist/bin/next start --hostname 127.0.0.1",
     "alerts:worker": "node --experimental-sqlite --conditions=react-server --import tsx scripts/alerts-worker.ts",
+    "reviews:worker": "node --experimental-sqlite --conditions=react-server --import tsx scripts/review-worker.ts",
     "typecheck": "tsc --noEmit",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" \"scripts/**/*.ts\" \"tests/**/*.ts\"",
     "lint": "eslint .",
     "test": "tsx --test tests/unit/*.test.ts",
     "test:alerts": "node --experimental-sqlite --conditions=react-server --import tsx --test tests/integration/alert-store.test.ts",
+    "test:reviews": "node --experimental-sqlite --conditions=react-server --import tsx --test tests/integration/review-store.test.ts",
     "test:e2e": "playwright test"
   },
   "dependencies": {

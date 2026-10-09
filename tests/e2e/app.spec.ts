@@ -147,8 +147,15 @@ test("未登录自选页面受保护，界面注册后可以收藏和移除股�
   ).toBeVisible();
   await page.getByRole("button", { name: "移出自选 sh600519" }).click();
   await expect(page.getByText("自选列表还是空的，搜索你关注的第一只股票吧")).toBeVisible();
+  // 顶栏吸顶时弹层应跟随顶栏，页面滚动不能令退出菜单的点击落在旧坐标。
+  await page.evaluate(() => window.scrollTo(0, 16));
   await page.getByRole("button", { name: "账号菜单" }).click();
+  const logoutResponse = page.waitForResponse(
+    (response) =>
+      response.url().endsWith("/api/auth/logout") && response.request().method() === "POST",
+  );
   await page.getByRole("menuitem", { name: /退出登录/ }).click();
+  expect((await logoutResponse).status()).toBe(200);
   await expect(page.getByRole("button", { name: "登录 / 注册" })).toBeVisible();
 });
 
