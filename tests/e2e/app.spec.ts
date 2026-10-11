@@ -86,7 +86,16 @@ test("搜索、行情、K线、资金和财务页面使用真实接口", async (
   await expect(page.getByRole("heading", { name: "五档盘口" })).toBeVisible();
   await expect(page.locator("canvas").first()).toBeVisible();
   await page.locator(".chart-controls").getByText("日 K", { exact: true }).click();
+  await expect(
+    page.locator(".chart-panel").getByText("前复权日线 · 技术指标 · 成交量"),
+  ).toBeVisible();
+  await expect(page.getByRole("radio", { name: "前复权", exact: true })).toBeChecked();
+  await page
+    .getByRole("radiogroup", { name: "日线复权口径" })
+    .getByText("未复权", { exact: true })
+    .click();
   await expect(page.locator(".chart-panel").getByText("未复权价格 · 均线 · 成交量")).toBeVisible();
+  await expect(page.getByRole("radio", { name: "未复权", exact: true })).toBeChecked();
   await expect(page.locator("canvas").first()).toBeVisible();
   await page.getByRole("tab", { name: "资金流向" }).click();
   await expect(page.getByText("今日资金净流入", { exact: true })).toBeVisible();

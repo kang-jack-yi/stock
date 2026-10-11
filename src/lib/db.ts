@@ -42,6 +42,25 @@ export function db() {
     );
     CREATE INDEX IF NOT EXISTS alert_events_user ON alert_events(user_id, created_at DESC);
     CREATE TABLE IF NOT EXISTS worker_status (id TEXT PRIMARY KEY, checked_at INTEGER NOT NULL, message TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS signal_rules (
+      id TEXT PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      symbol TEXT NOT NULL, kind TEXT NOT NULL, enabled INTEGER NOT NULL DEFAULT 1,
+      checked_date TEXT, created_at INTEGER NOT NULL, UNIQUE(user_id,symbol,kind)
+    );
+    CREATE INDEX IF NOT EXISTS signal_rules_user ON signal_rules(user_id);
+    CREATE TABLE IF NOT EXISTS signal_events (
+      id TEXT PRIMARY KEY, rule_id TEXT REFERENCES signal_rules(id) ON DELETE SET NULL,
+      user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE, symbol TEXT NOT NULL,
+      name TEXT NOT NULL, kind TEXT NOT NULL, value REAL NOT NULL, date TEXT NOT NULL,
+      created_at INTEGER NOT NULL, read_at INTEGER, UNIQUE(rule_id,date)
+    );
+    CREATE INDEX IF NOT EXISTS signal_events_user ON signal_events(user_id,created_at DESC);
+    CREATE TABLE IF NOT EXISTS intelligence_entries (
+      user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE, id TEXT NOT NULL,
+      payload TEXT NOT NULL, read_at INTEGER, saved INTEGER NOT NULL DEFAULT 0,
+      updated_at INTEGER NOT NULL, PRIMARY KEY(user_id,id)
+    );
+    CREATE INDEX IF NOT EXISTS intelligence_entries_user ON intelligence_entries(user_id,updated_at DESC);
     CREATE TABLE IF NOT EXISTS saved_screeners (
       id TEXT PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
       name TEXT NOT NULL, filters TEXT NOT NULL, created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL
@@ -66,6 +85,15 @@ export function db() {
       amount REAL NOT NULL DEFAULT 0, fee REAL NOT NULL DEFAULT 0, note TEXT NOT NULL DEFAULT '', created_at INTEGER NOT NULL
     );
     CREATE INDEX IF NOT EXISTS portfolio_transactions_user ON portfolio_transactions(user_id,date,sequence);
+    CREATE TABLE IF NOT EXISTS portfolio_import_rows (
+      user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE, source_key TEXT NOT NULL,
+      record_hash TEXT NOT NULL, transaction_id TEXT NOT NULL, created_at INTEGER NOT NULL,
+      PRIMARY KEY(user_id,source_key)
+    );
+    CREATE TABLE IF NOT EXISTS portfolio_risk_settings (
+      user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+      payload TEXT NOT NULL, updated_at INTEGER NOT NULL
+    );
     CREATE TABLE IF NOT EXISTS review_markets (date TEXT PRIMARY KEY, payload TEXT NOT NULL, fetched_at INTEGER NOT NULL);
     CREATE TABLE IF NOT EXISTS review_accounts (
       user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,

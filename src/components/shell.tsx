@@ -22,6 +22,8 @@ import {
   BellOutlined,
   WalletOutlined,
   HistoryOutlined,
+  RadarChartOutlined,
+  InboxOutlined,
 } from "@ant-design/icons";
 import { useApp } from "./providers";
 import { StockSearch } from "./search";
@@ -41,6 +43,8 @@ const navigation = [
   { href: "/alerts", label: "提醒中心", icon: BellOutlined, group: "研究工具" },
   { href: "/portfolio", label: "持仓分析", icon: WalletOutlined, group: "研究工具" },
   { href: "/review", label: "每日复盘", icon: HistoryOutlined, group: "研究工具" },
+  { href: "/signals", label: "技术信号", icon: RadarChartOutlined, group: "研究工具" },
+  { href: "/intelligence", label: "关注情报", icon: InboxOutlined, group: "研究工具" },
 ];
 /** 首页采用精确匹配，其余导航允许详情子路径继承当前栏目状态。 */
 function isActivePath(pathname: string, href: string) {

@@ -14,6 +14,8 @@ import { WatchButton } from "./watch-button";
 import { DataError, DataMeta, DataSkeleton } from "./data-state";
 import { StockResearch } from "./stock-research";
 import { Announcements } from "./announcements";
+import { TechnicalPanel } from "./technical-panel";
+import { technicalSymbol } from "@/lib/technical-calculation";
 
 /** 买卖各五档数量从股转换为手，条形长度表示同一盘口内相对数量。 */
 function OrderBook({ quote }: { quote: Quote }) {
@@ -120,6 +122,15 @@ export function StockDetail({ symbol, view }: { symbol: string; view: string }) 
     ...(!index
       ? [
           { key: "research", label: "研究笔记", children: <StockResearch symbol={symbol} /> },
+          ...(technicalSymbol(symbol)
+            ? [
+                {
+                  key: "technical",
+                  label: "技术信号",
+                  children: <TechnicalPanel symbol={symbol} />,
+                },
+              ]
+            : []),
           {
             key: "announcements",
             label: "公告与事件",

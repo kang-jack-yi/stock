@@ -1,0 +1,114 @@
+.intelligence-panel {
+  padding: 24px;
+}
+.intelligence-filters {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.intelligence-filters .ant-select {
+  min-width: 160px;
+}
+.intelligence-filters .ant-select:first-child {
+  min-width: 220px;
+}
+.intelligence-scope {
+  color: var(--muted);
+  line-height: 1.8;
+  margin: 16px 0 20px;
+}
+.intelligence-coverage {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.intelligence-coverage .ant-alert {
+  min-width: 0;
+}
+.intelligence-list {
+  display: grid;
+  gap: 16px;
+}
+.intelligence-security {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.intelligence-security h2 {
+  font-size: 18px;
+  margin: 0;
+}
+.intelligence-item {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  min-width: 0;
+}
+.intelligence-item.is-read h2 {
+  color: var(--muted);
+}
+.intelligence-item-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  color: var(--muted);
+  font-size: 12px;
+}
+.intelligence-item-meta time {
+  margin-left: auto;
+}
+.intelligence-item h2 {
+  font-size: 16px;
+  line-height: 1.7;
+  margin: 12px 0 8px;
+  overflow-wrap: anywhere;
+}
+.intelligence-item p {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+.intelligence-item-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+.intelligence-panel .intelligence-archive {
+  margin-bottom: 24px;
+}
+.intelligence-pagination {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+@media (max-width: 800px) {
+  .intelligence-coverage {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .intelligence-panel {
+    padding: 16px;
+  }
+  .intelligence-filters .ant-select,
+  .intelligence-filters .ant-select:first-child {
+    width: 100%;
+    min-width: 0;
+  }
+  .intelligence-item {
+    padding: 16px;
+  }
+  .intelligence-item-meta time {
+    width: 100%;
+    margin-left: 0;
+  }
+  .intelligence-item-actions .ant-btn {
+    padding-inline: 10px;
+  }
+}

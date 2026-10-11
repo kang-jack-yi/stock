@@ -87,6 +87,9 @@ npm run lint
 npm run test
 npm run test:alerts
 npm run test:reviews
+npm run test:portfolio
+npm run test:signals
+npm run test:intelligence
 npm run build
 npm run test:e2e
 ```

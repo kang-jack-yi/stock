@@ -35,6 +35,8 @@ import { direction, number, signed } from "@/lib/format";
 import { useApp } from "./providers";
 import { Chart } from "./chart";
 import { DataError, DataSkeleton } from "./data-state";
+import { PortfolioImport } from "./portfolio-import";
+import { PortfolioRisk } from "./portfolio-risk";
 import "./portfolio.css";
 
 const kinds: Record<TransactionKind, string> = {
@@ -356,13 +358,14 @@ function PortfolioWorkspace({
     cash = kind === "deposit" || kind === "withdraw";
   return (
     <>
-      <div className="page-heading">
+      <div className="page-heading portfolio-heading">
         <div>
           <div className="eyebrow">PERSONAL PORTFOLIO</div>
           <h1>持仓与组合</h1>
           <p>记录真实发生的交易，查看成本、仓位与盈亏贡献。</p>
         </div>
         <div className="portfolio-actions">
+          <PortfolioImport onImported={mutate} />
           <Button icon={<ReloadOutlined />} loading={isValidating} onClick={() => mutate()}>
             刷新估值
           </Button>
@@ -453,6 +456,7 @@ function PortfolioWorkspace({
               )}
             </section>
           )}
+          <PortfolioRisk portfolio={data} userId={userId} />
           <section className="panel portfolio-records">
             <div className="panel-heading">
               <div>

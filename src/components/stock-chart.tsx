@@ -6,10 +6,13 @@ import type { EChartsCoreOption } from "echarts/core";
 import { useMarketData } from "@/lib/api";
 import type { Candle, MinuteDay, MinutePoint } from "@/lib/types";
 import { compact, number } from "@/lib/format";
+import { technicalSymbol } from "@/lib/technical-calculation";
+import type { TechnicalResult } from "@/lib/technical-types";
 import { Chart } from "./chart";
 import { useApp } from "./providers";
 import { chartColors } from "@/lib/chart-theme";
 import { DataError, DataMeta, DataSkeleton, NoData } from "./data-state";
+import "./technical.css";
 
 /** 从未复权日线聚合周/月 OHLC；成交量相加，不修改源数据。 */
 export function aggregateCandles(rows: Candle[], period: "week" | "month") {
@@ -43,18 +46,29 @@ export function StockChart({
   symbol,
   title = "行情走势",
   overview = false,
+  initialPeriod = "minute",
 }: {
   symbol: string;
   title?: string;
   overview?: boolean;
+  /** 初始图表周期；技术视图默认日线，用户仍可切换其他周期。 */
+  initialPeriod?: "minute" | "day";
 }) {
   const { mode } = useApp();
-  const [period, setPeriod] = useState("minute");
+  const [period, setPeriod] = useState<string>(initialPeriod);
+  const [adjustment, setAdjustment] = useState("qfq");
+  const [indicator, setIndicator] = useState("volume");
+  const dailyTechnical = period === "day" && technicalSymbol(symbol);
   const minute = period === "minute" || period === "five";
   const scale = ["5", "15", "30", "60"].includes(period) ? period : "240";
-  const { data, error, isLoading, mutate } = useMarketData<MinuteDay[] | Candle[]>(
-    `/api/market/${minute ? "minutes" : "candles"}?symbol=${symbol}${minute ? "" : `&scale=${scale}`}`,
+  const { data, error, isLoading, mutate } = useMarketData<
+    MinuteDay[] | Candle[] | TechnicalResult
+  >(
+    dailyTechnical
+      ? `/api/technical?symbol=${symbol}&adjustment=${adjustment}`
+      : `/api/market/${minute ? "minutes" : "candles"}?symbol=${symbol}${minute ? "" : `&scale=${scale}`}`,
   );
+  const technical = dailyTechnical ? (data?.data as TechnicalResult | undefined) : undefined;
   const minuteDays = minute ? (data?.data as MinuteDay[] | undefined) : undefined;
   const selectedDays = useMemo(
     () => (period === "five" ? minuteDays : minuteDays?.slice(-1)),
@@ -73,8 +87,10 @@ export function StockChart({
         ? []
         : period === "week" || period === "month"
           ? aggregateCandles((data?.data as Candle[]) || [], period)
-          : (data?.data as Candle[]) || [],
-    [minute, period, data],
+          : dailyTechnical
+            ? technical?.points || []
+            : (data?.data as Candle[]) || [],
+    [minute, period, data, dailyTechnical, technical],
   );
   const latest = minute ? minuteRows.at(-1) : candles.at(-1);
   const option = useMemo<EChartsCoreOption>(() => {
@@ -110,7 +126,15 @@ export function StockChart({
             : number(typeof value === "number" ? value : null),
       },
       legend: {
-        data: minute ? ["价格", "均价"] : ["MA5", "MA10", "MA20"],
+        data: minute
+          ? ["价格", "均价"]
+          : dailyTechnical && indicator === "boll"
+            ? ["MA20", "布林上轨", "布林下轨"]
+            : dailyTechnical && indicator === "macd"
+              ? ["MA5", "MA10", "MA20", "DIF", "DEA"]
+              : dailyTechnical && indicator === "rsi"
+                ? ["MA5", "MA10", "MA20", "RSI14"]
+                : ["MA5", "MA10", "MA20"],
         top: 0,
         left: 8,
         textStyle: { color: muted, fontSize: 11 },
@@ -154,7 +178,12 @@ export function StockChart({
           type: "value",
           gridIndex: 1,
           splitNumber: 2,
-          axisLabel: { color: muted, fontSize: 10, formatter: (n: number) => compact(n) },
+          axisLabel: {
+            color: muted,
+            fontSize: 10,
+            formatter: (n: number) =>
+              dailyTechnical && ["macd", "rsi"].includes(indicator) ? number(n) : compact(n),
+          },
         },
       ],
       dataZoom: minute ? [] : [{ type: "inside", xAxisIndex: [0, 1], start: 75, end: 100 }],
@@ -210,26 +239,95 @@ export function StockChart({
                 borderColor0: palette.down,
               },
             },
-            ...[5, 10, 20].map((days) => ({
+            ...(dailyTechnical && indicator === "boll" ? [20] : [5, 10, 20]).map((days) => ({
               name: `MA${days}`,
               type: "line",
               showSymbol: false,
               data: movingAverage(candles, days),
               lineStyle: { width: 1.1 },
             })),
-            {
-              name: "成交量（股）",
-              type: "bar",
-              xAxisIndex: 1,
-              yAxisIndex: 1,
-              data: candles.map((c) => ({
-                value: c.volume,
-                itemStyle: { color: c.close >= c.open ? palette.up : palette.down, opacity: 0.65 },
-              })),
-            },
+            ...(dailyTechnical && indicator === "boll"
+              ? [
+                  {
+                    name: "布林上轨",
+                    type: "line",
+                    showSymbol: false,
+                    data: technical?.points.map((row) => row.upper),
+                    lineStyle: { width: 1, type: "dashed" },
+                  },
+                  {
+                    name: "布林下轨",
+                    type: "line",
+                    showSymbol: false,
+                    data: technical?.points.map((row) => row.lower),
+                    lineStyle: { width: 1, type: "dashed" },
+                  },
+                ]
+              : []),
+            ...(dailyTechnical && indicator === "macd"
+              ? [
+                  {
+                    name: "MACD 柱",
+                    type: "bar",
+                    xAxisIndex: 1,
+                    yAxisIndex: 1,
+                    data: technical?.points.map((row) => ({
+                      value: row.macd,
+                      itemStyle: { color: (row.macd ?? 0) >= 0 ? palette.up : palette.down },
+                    })),
+                  },
+                  {
+                    name: "DIF",
+                    type: "line",
+                    xAxisIndex: 1,
+                    yAxisIndex: 1,
+                    showSymbol: false,
+                    data: technical?.points.map((row) => row.dif),
+                  },
+                  {
+                    name: "DEA",
+                    type: "line",
+                    xAxisIndex: 1,
+                    yAxisIndex: 1,
+                    showSymbol: false,
+                    data: technical?.points.map((row) => row.dea),
+                  },
+                ]
+              : dailyTechnical && indicator === "rsi"
+                ? [
+                    {
+                      name: "RSI14",
+                      type: "line",
+                      xAxisIndex: 1,
+                      yAxisIndex: 1,
+                      showSymbol: false,
+                      data: technical?.points.map((row) => row.rsi),
+                      markLine: {
+                        silent: true,
+                        symbol: "none",
+                        data: [{ yAxis: 30 }, { yAxis: 70 }],
+                        lineStyle: { color: muted, type: "dashed" },
+                      },
+                    },
+                  ]
+                : [
+                    {
+                      name: "成交量（股）",
+                      type: "bar",
+                      xAxisIndex: 1,
+                      yAxisIndex: 1,
+                      data: candles.map((c) => ({
+                        value: c.volume,
+                        itemStyle: {
+                          color: c.close >= c.open ? palette.up : palette.down,
+                          opacity: 0.65,
+                        },
+                      })),
+                    },
+                  ]),
           ],
     };
-  }, [mode, minute, period, selectedDays, candles]);
+  }, [mode, minute, period, selectedDays, candles, dailyTechnical, indicator, technical]);
   const date = minute ? minuteDays?.at(-1)?.date : candles.at(-1)?.date;
   return (
     <section className="panel chart-panel">
@@ -237,7 +335,11 @@ export function StockChart({
         <div>
           <h2>{title}</h2>
           <span className="panel-caption">
-            {minute ? "价格 · 均价 · 成交量" : "未复权价格 · 均线 · 成交量"}
+            {minute
+              ? "价格 · 均价 · 成交量"
+              : dailyTechnical && adjustment === "qfq"
+                ? "前复权日线 · 技术指标 · 成交量"
+                : "未复权价格 · 均线 · 成交量"}
           </span>
         </div>
         <div className="chart-controls">
@@ -265,6 +367,35 @@ export function StockChart({
           />
         </div>
       </div>
+      {dailyTechnical && (
+        <>
+          <div className="technical-chart-tools">
+            <Segmented
+              aria-label="日线复权口径"
+              value={adjustment}
+              onChange={(value) => setAdjustment(String(value))}
+              options={[
+                { label: "前复权", value: "qfq" },
+                { label: "未复权", value: "none" },
+              ]}
+            />
+            <Segmented
+              aria-label="图表技术指标"
+              value={indicator}
+              onChange={(value) => setIndicator(String(value))}
+              options={[
+                { label: "成交量", value: "volume" },
+                { label: "MACD", value: "macd" },
+                { label: "RSI14", value: "rsi" },
+                { label: "布林带", value: "boll" },
+              ]}
+            />
+          </div>
+          <p className="technical-chart-note">
+            仅日线支持此复权口径与指标；周/月及分钟线保留原未复权数据。{technical?.warning}
+          </p>
+        </>
+      )}
       {isLoading ? (
         <DataSkeleton rows={7} />
       ) : error ? (

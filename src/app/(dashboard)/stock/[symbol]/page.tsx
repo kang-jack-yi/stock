@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { StockDetail } from "@/components/stock-detail";
 import { symbolPattern } from "@/lib/sina/parse";
 import { isIndex } from "@/lib/format";
+import { technicalSymbol } from "@/lib/technical-calculation";
 /** 动态股票页面在服务端校验路径代码，错误路径不进入数据请求层。 */
 export default async function StockPage({
   params,
@@ -14,7 +15,9 @@ export default async function StockPage({
     { view } = await searchParams;
   if (!symbolPattern.test(symbol)) notFound();
   const selected =
-    !isIndex(symbol) && ["funds", "financials", "research", "announcements"].includes(view || "")
+    !isIndex(symbol) &&
+    ["funds", "financials", "research", "announcements", "technical"].includes(view || "") &&
+    (view !== "technical" || technicalSymbol(symbol))
       ? view!
       : "overview";
   return <StockDetail symbol={symbol} view={selected} />;
